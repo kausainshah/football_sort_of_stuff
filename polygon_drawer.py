@@ -44,6 +44,11 @@ class PolygonDrawer(object):
             # Left click means adding a point at current position to the list of points
             print("Adding point #%d with position(%d,%d)" %
                   (len(self.points), x, y))
+
+            ####################################
+            # can put distance related checks here
+            ####################################
+
             self.points.append((x, y))
         elif event == cv2.EVENT_RBUTTONDOWN:
             # Right click means we're done

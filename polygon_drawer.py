@@ -1,3 +1,5 @@
+import sys
+from PIL import Image
 import numpy as np
 import cv2
 import copy
@@ -14,6 +16,7 @@ def load_images_from_folder(folder):
     img_names = []
     for filename in os.listdir(folder):
         img = cv2.imread(os.path.join(folder, filename))
+        img = cv2.resize(img, (256, 256))
         if img is not None:
             images.append(img)
             img_names.append(filename)
@@ -98,7 +101,7 @@ class PolygonDrawer(object):
         # cv2.imwrite("masked_roi_road.jpg", mask)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
-        return mask, self.points
+        return mask, canvas, self.points
 
 
 def distance_euclidean(p1=(0, 0), p2=(0, 0)):
@@ -122,15 +125,39 @@ def distance_euclidean(p1=(0, 0), p2=(0, 0)):
     return (math.sqrt(((x2-x1)**2) + ((y2-y1)**2)))
 
 
+def create_collab(_img1, _img2, _path):
+    # images = [Image.open(x) for x in ['logo.png', 'logo.png']]
+    _img1 = im = cv2.cvtColor(_img1, cv2.COLOR_BGR2RGB)
+    _img2 = im = cv2.cvtColor(_img2, cv2.COLOR_BGR2RGB)
+
+    images = [Image.fromarray(_img2), Image.fromarray(_img1)]
+
+    widths, heights = zip(*(i.size for i in images))
+
+    total_width = sum(widths)
+    max_height = max(heights)
+
+    new_im = Image.new('RGB', (total_width, max_height))
+
+    x_offset = 0
+    for im in images:
+        new_im.paste(im, (x_offset, 0))
+        x_offset += im.size[0]
+    new_im.save(_path)
+
+
 if __name__ == "__main__":
 
     # all images as numpy matrix
     imgs, imgs_names = load_images_from_folder("input/")
-    # print("imgs", imgs)
+    print("imgs", imgs.shape)
     # print("imgs_names = ", imgs_names)
     for i, images in enumerate(imgs):
-        pd = PolygonDrawer("Polygon", images)
-        masked, points = pd.run()
+        pd = PolygonDrawer("{}".format(imgs_names[i]), images)
+        masked, original, points = pd.run()
+
+        create_collab(masked, original, "output/{}.jpg".format(imgs_names[i]))
+
         # cv2.imwrite("demo.jpg", image_original)
-        cv2.imwrite("output/{}.jpg".format(imgs_names[i]), masked)
+        # cv2.imwrite("output/{}.jpg".format(imgs_names[i]), masked)
         # print("Polygon = %s" % pd.points)

@@ -120,8 +120,7 @@ def distance_euclidean(p1=(0, 0), p2=(0, 0)):
 if __name__ == "__main__":
 
     # all images as numpy matrix
-
-    imgs, imgs_names = load_images_from_folder("sam/")
+    imgs, imgs_names = load_images_from_folder("input/")
     # print("imgs", imgs)
     # print("imgs_names = ", imgs_names)
     for i, images in enumerate(imgs):

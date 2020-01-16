@@ -4,7 +4,7 @@ annotation tool to mask football field
 ```
 ### Dependencies
 ```
-conda install --yes --file requirements.txt
+pip install -r requirements.txt
 ```
 
 ### Getting started

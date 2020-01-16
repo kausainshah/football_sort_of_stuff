@@ -1,11 +1,8 @@
-import sys
 from PIL import Image
 import numpy as np
 import cv2
 import copy
 import os
-import math
-import glob
 
 CANVAS_SIZE = (600, 800)
 FINAL_LINE_COLOR = (255, 255, 255)
@@ -103,27 +100,6 @@ class PolygonDrawer(object):
         cv2.waitKey(0)
         cv2.destroyAllWindows()
         return mask, canvas, self.points
-
-
-def distance_euclidean(p1=(0, 0), p2=(0, 0)):
-    """calculate eucleadean distance of bboxe centers of two consecutive
-    frames and appends in global variable of DIST
-
-    Parameters
-    ----------
-    p1 : tuple
-        point 1 (x1,y1)
-    p2 : tuple
-        point 2 (x2,y2)
-
-    Returns
-    -------
-    NILL
-    """
-    # d = \sqrt{(x_2 - x_1)^2 + (y_2-y_1)^2}
-    (x1, y1) = p1
-    (x2, y2) = p2
-    return (math.sqrt(((x2-x1)**2) + ((y2-y1)**2)))
 
 
 def create_collab(_img1, _img2, _path):

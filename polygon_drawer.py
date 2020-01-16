@@ -147,6 +147,8 @@ if __name__ == "__main__":
             create_collab(masked, original,
                           "output/{}/{}".format(folders, imgs_names[i]))
 
-            # cv2.imwrite("demo.jpg", image_original)
-            # cv2.imwrite("output/{}.jpg".format(imgs_names[i]), masked)
+            # cv2.imwrite("output/{}/{}".format(folders,
+            #                                   imgs_names[i]), original)
+            # cv2.imwrite(
+            #     "output/{}/m_{}".format(folders, imgs_names[i]), masked)
             # print("Polygon = %s" % pd.points)

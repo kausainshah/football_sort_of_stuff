@@ -5,6 +5,7 @@ import cv2
 import copy
 import os
 import math
+import glob
 
 CANVAS_SIZE = (600, 800)
 FINAL_LINE_COLOR = (255, 255, 255)
@@ -148,16 +149,28 @@ def create_collab(_img1, _img2, _path):
 
 if __name__ == "__main__":
 
-    # all images as numpy matrix
-    imgs, imgs_names = load_images_from_folder("input/")
-    print("imgs", imgs.shape)
-    # print("imgs_names = ", imgs_names)
-    for i, images in enumerate(imgs):
-        pd = PolygonDrawer("{}".format(imgs_names[i]), images)
-        masked, original, points = pd.run()
+    # folder of folders
+    inp_folder = "input/"
 
-        create_collab(masked, original, "output/{}.jpg".format(imgs_names[i]))
+    if not os.path.exists("output/"):
+        os.mkdir("output")
+    for folders in os.listdir(inp_folder):
+        # print(folders)
+        imgs, imgs_names = load_images_from_folder(inp_folder+folders)
+        # print("imgs", imgs.shape)
+        # print("names ", imgs_names)
+        # print("imgs_names = ", imgs_names)
+        for i, images in enumerate(imgs):
+            pd = PolygonDrawer("{}/{}".format(folders, imgs_names[i]), images)
+            masked, original, points = pd.run()
 
-        # cv2.imwrite("demo.jpg", image_original)
-        # cv2.imwrite("output/{}.jpg".format(imgs_names[i]), masked)
-        # print("Polygon = %s" % pd.points)
+            # create output folder if not exists
+            if not os.path.exists("output/{}".format(folders)):
+                os.makedirs("output/{}/".format(folders))
+
+            create_collab(masked, original,
+                          "output/{}/{}".format(folders, imgs_names[i]))
+
+            # cv2.imwrite("demo.jpg", image_original)
+            # cv2.imwrite("output/{}.jpg".format(imgs_names[i]), masked)
+            # print("Polygon = %s" % pd.points)

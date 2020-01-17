@@ -99,6 +99,8 @@ class PolygonDrawer(object):
         # cv2.imwrite("masked_roi_road.jpg", mask)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
+        self.points = []
+        print("\n")
         return mask, canvas, self.points
 
 

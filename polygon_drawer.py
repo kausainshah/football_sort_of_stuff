@@ -8,15 +8,22 @@ CANVAS_SIZE = (600, 800)
 FINAL_LINE_COLOR = (255, 255, 255)
 WORKING_LINE_COLOR = (127, 127, 127)
 
+PADDING_PIXELS = 100
+
 
 def load_images_from_folder(folder):
     images = []
     img_names = []
     for filename in os.listdir(folder):
         img = cv2.imread(os.path.join(folder, filename))
-        img = cv2.resize(img, (256, 256))
+        # img = cv2.resize(img, (256, 256))
+        top, bottom, left, right = (
+            PADDING_PIXELS, PADDING_PIXELS, PADDING_PIXELS, PADDING_PIXELS)
+        padded_im = cv2.copyMakeBorder(
+            img, top, bottom, left, right, borderType=cv2.BORDER_CONSTANT, value=[0, 0, 0])
         if img is not None:
-            images.append(img)
+            # images.append(img)
+            images.append(padded_im)
             img_names.append(filename)
     # converting to numpy type array
     images = np.array(images)
@@ -80,7 +87,7 @@ class PolygonDrawer(object):
             cv2.imshow(self.window_name, canvas)
             # And wait 50ms before next iteration (this will pump window messages meanwhile)
             # if cv2.waitKey(50) == 27:  # ESC hit
-            if cv2.waitKey(50) == ord(" "):  # ESC hit
+            if cv2.waitKey(50) == 32:
                 self.done = True
 
         # User finised entering the polygon points, so let's make the final drawing
@@ -91,7 +98,8 @@ class PolygonDrawer(object):
         # of a filled polygon
         if (len(self.points) > 0):
             # cv2.fillPoly(canvas, np.array([self.points]), FINAL_LINE_COLOR)
-            cv2.fillPoly(mask, np.array([self.points]), FINAL_LINE_COLOR)
+            cv2.fillPoly(mask, np.array([self.points]),
+                         FINAL_LINE_COLOR, lineType=cv2.LINE_AA)
         # And show it
         # cv2.imshow(self.window_name, canvas)
         # cv2.imshow("mask", mask)
@@ -128,7 +136,7 @@ def create_collab(_img1, _img2, _path):
 if __name__ == "__main__":
 
     # folder of folders
-    inp_folder = "input/"
+    inp_folder = "in1/"
 
     if not os.path.exists("output/"):
         os.mkdir("output")
@@ -139,12 +147,20 @@ if __name__ == "__main__":
         # print("names ", imgs_names)
         # print("imgs_names = ", imgs_names)
         for i, images in enumerate(imgs):
+            print("image ", inp_folder + folders + "/" + imgs_names[i])
             pd = PolygonDrawer("{}/{}".format(folders, imgs_names[i]), images)
             masked, original, points = pd.run()
 
             # create output folder if not exists
             if not os.path.exists("output/{}".format(folders)):
                 os.makedirs("output/{}/".format(folders))
+
+            masked = masked[PADDING_PIXELS:PADDING_PIXELS +
+                            720, PADDING_PIXELS:PADDING_PIXELS+1280]
+            original = original[PADDING_PIXELS:PADDING_PIXELS +
+                                720, PADDING_PIXELS:PADDING_PIXELS+1280]
+            masked = cv2.resize(masked, (256, 256))
+            original = cv2.resize(original, (256, 256))
 
             create_collab(masked, original,
                           "output/{}/{}".format(folders, imgs_names[i]))

@@ -16,7 +16,7 @@ def load_images_from_folder(folder):
     img_names = []
     for filename in os.listdir(folder):
         img = cv2.imread(os.path.join(folder, filename))
-        img = cv2.resize(img, (256, 256))
+        img = cv2.resize(img, (512, 512))
         top, bottom, left, right = (
             PADDING_PIXELS, PADDING_PIXELS, PADDING_PIXELS, PADDING_PIXELS)
         padded_im = cv2.copyMakeBorder(
@@ -169,10 +169,10 @@ if __name__ == "__main__":
                 os.makedirs("output/{}/".format(folders))
 
             masked = masked[PADDING_PIXELS:PADDING_PIXELS +
-                            256, PADDING_PIXELS:PADDING_PIXELS+256]
+                            512, PADDING_PIXELS:PADDING_PIXELS+512]
             original = original[PADDING_PIXELS:PADDING_PIXELS +
-                                256, PADDING_PIXELS:PADDING_PIXELS+256]
-            # masked = cv2.resize(masked, (256, 256))
-            # original = cv2.resize(original, (256, 256))
+                                512, PADDING_PIXELS:PADDING_PIXELS+512]
+            masked = cv2.resize(masked, (256, 256))
+            original = cv2.resize(original, (256, 256))
             create_collab(masked, original,
                           "output/{}/{}".format(folders, imgs_names[i]))

@@ -155,6 +155,12 @@ if __name__ == "__main__":
         # print("imgs_names = ", imgs_names)
         for i, images in enumerate(imgs):
             print("image ", inp_folder + folders + "/" + imgs_names[i])
+
+            if os.path.exists("output/{}/{}".format(folders, imgs_names[i])):
+                print(
+                    "output/{}/{} already exists".format(folders, imgs_names[i]))
+                continue
+
             pd = PolygonDrawer("{}/{}".format(folders, imgs_names[i]), images)
             masked, original, points = pd.run()
 

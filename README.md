@@ -1,7 +1,7 @@
-# football_field_mask_tool
-```
-annotation tool to mask football field  
-```
+# football realted stuff
+### Functionalities
+- using mouse clicks making and ROI or ploygonal rect
+- checking if a point exists in ROI/Polygon or not
 ### Dependencies
 ```
 pip install -r requirements.txt
